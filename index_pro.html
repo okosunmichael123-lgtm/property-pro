@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Estimator | Michael Okosun</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; text-align: center; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .wa-btn { background-color: #25D366; margin-top: 15px; display: none; text-decoration: none; color: white; display: block; padding: 12px; border-radius: 5px; font-weight: bold; }
+        #result { margin-top: 20px; font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Property Estimator</h2>
+        <p>Consultant: <strong>Michael Okosun</strong></p>
+        
+        <input type="number" id="sqm" placeholder="Enter Total Square Meters">
+        <input type="number" id="rate" placeholder="Rate per SQM (e.g. 150000)">
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 14px;">
+    <p style="margin-top: 0; color: #333;"><strong>💡 Price Guide per SQM:</strong></p>
+    <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 5px;">🏗️ <strong>Standard:</strong> ₦150k - ₦200k (Blocks/Cement/Basic)</li>
+        <li style="margin-bottom: 5px;">🏠 <strong>Quality:</strong> ₦250k - ₦350k (Full Finishing/Tiles)</li>
+        <li style="margin-bottom: 5px;">🏰 <strong>Luxury:</strong> ₦450k+ (Premium Materials)</li>
+    </ul>
+    <p style="font-size: 12px; color: #666; margin-bottom: 0;">*Estimates include Materials, Labour, and Supervision.*</p>
+</div>
+
+        <button onclick="calculate()">Calculate Estimate</button>
+        
+        <div id="result"></div>
+        
+        <div id="actions" style="display:none;">
+            <button onclick="generatePDF()" style="background-color: #6c757d;">Download PDF Report</button>
+            <a id="waLink" href="#" class="wa-btn">Discuss on WhatsApp</a>
+        </div>
+    </div>
+
+    <script>
+        let finalEstimate = 0;
+
+        function calculate() {
+            const sqm = document.getElementById('sqm').value;
+            const rate = document.getElementById('rate').value;
+            
+            if (sqm && rate) {
+                finalEstimate = sqm * rate;
+                document.getElementById('result').innerHTML = "Total Estimate: ₦" + finalEstimate.toLocaleString();
+                
+                // Show action buttons
+                document.getElementById('actions').style.display = "block";
+                
+                // Update WhatsApp Link
+                const waMessage = `Hello Michael, I just used your Estimator. For ${sqm}sqm at ₦${rate}/sqm, the total is ₦${finalEstimate.toLocaleString()}. I'd like to discuss digital plans.`;
+      document.getElementById('waLink').href= `https://wa.me/2348137842306?text=${encodeURIComponent(waMessage)}`;
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
+            doc.setFontSize(12);
+            doc.text("------------------------------------------", 20, 30);
+            doc.text(`Consultant: Michael Okosun`, 20, 40);
+            doc.text(`Total Area: ${document.getElementById('sqm').value} sqm`, 20, 50);
+            doc.text(`Rate per sqm: ₦${document.getElementById('rate').value}`, 20, 60);
+            doc.text(`TOTAL ESTIMATE: ₦${finalEstimate.toLocaleString()}`, 20, 80);
+            doc.text("------------------------------------------", 20, 90);
+            doc.text("Thank you for using our digital planning services.", 20, 100);
+            
+            doc.save("Property_Estimate_Okosun.pdf");
+        }
+    </script>
+</body>
+</html>
