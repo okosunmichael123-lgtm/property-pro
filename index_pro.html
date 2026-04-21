@@ -58,20 +58,20 @@
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Grab values directly from the boxes to avoid the "180" error
-        const sqm = document.getElementById('sqm').value;
-        const rate = document.getElementById('rate').value;
-        const total = sqm * rate;
-        const mBase = total * 0.015;
+        // This grabs the numbers exactly as they are on your screen right now
+        const liveSqm = document.getElementById('sqm').value;
+        const liveRate = document.getElementById('rate').value;
+        const liveTotal = liveSqm * liveRate;
+        const mBase = liveTotal * 0.015;
 
         doc.setFontSize(18);
         doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
         doc.setFontSize(12);
         doc.text("------------------------------------------", 20, 30);
         doc.text(`Consultant: Michael Okosun`, 20, 40);
-        doc.text(`Total Area: ${sqm} sqm`, 20, 50);
-        doc.text(`Rate per sqm: N${Number(rate).toLocaleString()}`, 20, 60);
-        doc.text(`TOTAL ESTIMATE: N${total.toLocaleString()}`, 20, 80);
+        doc.text(`Total Area: ${liveSqm} sqm`, 20, 50);
+        doc.text(`Rate per sqm: N${Number(liveRate).toLocaleString()}`, 20, 60);
+        doc.text(`TOTAL ESTIMATE: N${liveTotal.toLocaleString()}`, 20, 80);
         doc.text("------------------------------------------", 20, 90);
         
         doc.setFontSize(14);
