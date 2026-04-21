@@ -1,146 +1,87 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Estimator | Michael Okosun</title>
+    <title>Property Estimator Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; text-align: center; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-        .wa-btn { background-color: #25D366; margin-top: 15px; display: none; text-decoration: none; color: white; display: block; padding: 12px; border-radius: 5px; font-weight: bold; }
-        #result { margin-top: 20px; font-weight: bold; color: #333; }
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        #result { margin-top: 20px; font-weight: bold; text-align: center; font-size: 18px; }
+        #maintenance-plan { display: none; margin-top: 20px; border: 1px solid #e67e22; padding: 15px; border-radius: 8px; background-color: #fff9f4; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>Property Estimator</h2>
-        <p>Consultant: <strong>Michael Okosun</strong></p>
-        
-        <input type="number" id="sqm" placeholder="Enter Total Square Meters">
-        <input type="number" id="rate" placeholder="Rate per SQM (e.g. 150000)">
-        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 14px;">
-    <p style="margin-top: 0; color: #333;"><strong>💡 Price Guide per SQM:</strong></p>
-    <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 5px;">🏗️ <strong>Standard:</strong> ₦150k - ₦200k (Blocks/Cement/Basic)</li>
-        <li style="margin-bottom: 5px;">🏠 <strong>Quality:</strong> ₦250k - ₦350k (Full Finishing/Tiles)</li>
-        <li style="margin-bottom: 5px;">🏰 <strong>Luxury:</strong> ₦450k+ (Premium Materials)</li>
-    </ul>
-    <p style="font-size: 12px; color: #666; margin-bottom: 0;">*Estimates include Materials, Labour, and Supervision.*</p>
-</div>
-
-        <button onclick="calculate()">Calculate Estimate</button>
-        
-        <div id="result"></div><div id="maintenance-plan" style="margin-top: 25px; border: 1px solid #bdc3c7; padding: 15px; border-radius: 8px; background-color: #ffffff; display: none;">
-    <h3 style="color: #2c3e50; border-bottom: 2px solid #e67e22; padding-bottom: 5px;">🛡️ 5-Year Legacy Maintenance Plan</h3>
-    <p style="font-size: 13px; color: #7f8c8d;">Protect your investment with these scheduled actions:</p>
-    <table style="width: 100%; font-size: 14px; text-align: left;">
-        <tr>
-            <th style="padding: 5px;">Phase</th>
-            <th style="padding: 5px;">Action</th>
-            <th style="padding: 5px;">Budget</th>
-        </tr>
-        <tr>
-            <td style="padding: 5px;">Year 1</td>
-            <td style="padding: 5px;">Structural Check & Fumigation</td>
-            <td id="y1-cost" style="font-weight: bold; color: #27ae60;"></td>
-        </tr>
-        <tr>
-            <td style="padding: 5px;">Year 3</td>
-            <td style="padding: 5px;">Exterior Painting & Sealing</td>
-            <td id="y3-cost" style="font-weight: bold; color: #27ae60;"></td>
-        </tr>
-        <tr>
-            <td style="padding: 5px;">Year 5</td>
-            <td style="padding: 5px;">Full System Audit</td>
-            <td id="y5-cost" style="font-weight: bold; color: #27ae60;"></td>
-        </tr>
-    </table>
-</div>
-
-        
-        <div id="actions" style="display:none;">
-            <button onclick="generatePDF()" style="background-color: #6c757d;">Download PDF Report</button>
-            <a id="waLink" href="#" class="wa-btn">Discuss on WhatsApp</a>
-        </div>
+<div class="card">
+    <h2>Property Estimator</h2>
+    <p>Consultant: <strong>Michael Okosun</strong></p>
+    <input type="number" id="sqm" placeholder="Enter Total Area (sqm)">
+    <input type="number" id="rate" placeholder="Enter Rate per sqm (₦)">
+    <button onclick="calculate()">Calculate Estimate</button>
+    <div id="result"></div>
+    
+    <div id="maintenance-plan">
+        <h3 style="color: #e67e22;">🛡️ 5-Year Legacy Maintenance Plan</h3>
+        <p id="y1"></p>
+        <p id="y3"></p>
+        <p id="y5"></p>
     </div>
 
-    <script>
-        let finalEstimate = 0;
+    <div id="actions" style="display:none; margin-top:20px;">
+        <button onclick="generatePDF()" style="background-color: #28a745;">Download PDF Report</button>
+    </div>
+</div>
 
-        function calculate() {
-            const sqm = document.getElementById('sqm').value;
-            const rate = document.getElementById('rate').value;
+<script>
+    function calculate() {
+        const sqm = document.getElementById('sqm').value;
+        const rate = document.getElementById('rate').value;
+        if (sqm && rate) {
+            const total = sqm * rate;
+            document.getElementById('result').innerHTML = "Total Estimate: ₦" + total.toLocaleString();
             
-            if (sqm && rate) {
-                finalEstimate = sqm * rate;
-                document.getElementById('result').innerHTML = "Total Estimate: ₦" + finalEstimate.toLocaleString();
-                // --- Start of Legacy Plan Logic ---
-let mainBase = finalEstimate * 0.015;
-document.getElementById('y1-cost').innerText = "₦" + (mainBase * 0.4).toLocaleString();
-document.getElementById('y3-cost').innerText = "₦" + (mainBase * 1.1).toLocaleString();
-document.getElementById('y5-cost').innerText = "₦" + (mainBase * 1.8).toLocaleString();
-document.getElementById('maintenance-plan').style.display = "block";
-// --- End of Legacy Plan Logic ---
-
-                // Show action buttons
-                document.getElementById('actions').style.display = "block";
-                
-                // Update WhatsApp Link
-                const waMessage = `Hello Michael, I just used your Estimator. For ${sqm}sqm at ₦${rate}/sqm, the total is ₦${finalEstimate.toLocaleString()}. I'd like to discuss digital plans.`;
-      document.getElementById('waLink').href= `https://wa.me/2348137842306?text=${encodeURIComponent(waMessage)}`;
-            } else {
-                alert("Please fill in all fields.");
-            }
+            const mBase = total * 0.015;
+            document.getElementById('y1').innerText = "Year 1 (Fumigation): ₦" + (mBase * 0.4).toLocaleString();
+            document.getElementById('y3').innerText = "Year 3 (Painting): ₦" + (mBase * 1.1).toLocaleString();
+            document.getElementById('y5').innerText = "Year 5 (Audit): ₦" + (mBase * 1.8).toLocaleString();
+            
+            document.getElementById('maintenance-plan').style.display = "block";
+            document.getElementById('actions').style.display = "block";
         }
-function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    }
 
-    // LIVE DATA GRAB: This is the secret to fixing the 180 sqm error
-    const sqmValue = document.getElementById('sqm').value;
-    const rateValue = document.getElementById('rate').value;
-    const totalValue = sqmValue * rateValue;
-    const mBase = totalValue * 0.015;
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const sqm = document.getElementById('sqm').value;
+        const rate = document.getElementById('rate').value;
+        const total = sqm * rate;
+        const mBase = total * 0.015;
 
-    // Header
-    doc.setFontSize(18);
-    doc.setTextColor(44, 62, 80);
-    doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
-    
-    // Details
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    doc.text("------------------------------------------", 20, 30);
-    doc.text(`Consultant: Michael Okosun`, 20, 40);
-    doc.text(`Total Area: ${sqmValue} sqm`, 20, 50);
-    doc.text(`Rate per sqm: N${Number(rateValue).toLocaleString()}`, 20, 60);
-    doc.text(`TOTAL ESTIMATE: N${totalValue.toLocaleString()}`, 20, 80);
-    doc.text("------------------------------------------", 20, 90);
-
-    // Legacy Maintenance Plan - THE PROFESSIONAL TOUCH
-    doc.setFontSize(14);
-    doc.setTextColor(230, 126, 34); // Orange color for the title
-    doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
-    
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Year 1 (Structural/Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
-    doc.text(`Year 3 (Exterior Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
-    doc.text(`Year 5 (Full System Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
-
-    // Footer
-    doc.setFontSize(10);
-    doc.setTextColor(127, 140, 141);
-    doc.text("Thank you for using our digital planning services.", 20, 165);
-
-    // Save
-    doc.save("Property_Estimate_Okosun.pdf");
-}
+        doc.setFontSize(18);
+        doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
+        doc.setFontSize(12);
+        doc.text(`Consultant: Michael Okosun`, 20, 40);
+        doc.text(`Total Area: ${sqm} sqm`, 20, 50);
+        doc.text(`Rate per sqm: N${rate}`, 20, 60);
+        doc.text(`TOTAL ESTIMATE: N${total.toLocaleString()}`, 20, 80);
+        
+        doc.setFontSize(14);
+        doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
+        doc.setFontSize(12);
+        doc.text(`Year 1 (Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
+        doc.text(`Year 3 (Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
+        doc.text(`Year 5 (Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
+        
+        doc.text("Thank you for using our digital planning services.", 20, 165);
+        doc.save("Property_Estimate_Okosun.pdf");
+    }
 </script>
 </body>
 </html>
+
          
