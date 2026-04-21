@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -106,28 +106,30 @@ document.getElementById('maintenance-plan').style.display = "block";
             doc.setFontSize(12);
             doc.text("------------------------------------------", 20, 30);
             doc.text(`Consultant: Michael Okosun`, 20, 40);
-            doc.text(`Total Area: ${document.getElementById('sqm').value} sqm`, 20, 50);
-            doc.text(`Rate per sqm: ₦${document.getElementById('rate').value}`, 20, 60);
-            doc.text(`TOTAL ESTIMATE: ₦${finalEstimate.toLocaleString()}`, 20, 80);
-            doc.text("------------------------------------------", 20, 90);
-            // --- Start Legacy Plan Section ---
-doc.setFontSize(14);
-doc.setTextColor(44, 62, 80); // Dark Blue Color
-doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
+                    doc.text(`Total Area: ${document.getElementById('sqm').value} sqm`, 20, 50);
+        doc.text(`Rate per sqm: N${document.getElementById('rate').value}`, 20, 60);
 
-doc.setFontSize(12);
-doc.setTextColor(0, 0, 0); // Back to Black
-let mBase = finalEstimate * 0.015;
-doc.text(`Year 1 (Structural/Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
-doc.text(`Year 3 (Exterior Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
-doc.text(`Year 5 (Full System Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
-// --- End Legacy Plan Section ---
+        // This line calculates the LIVE total so it is always correct
+        const liveTotal = document.getElementById('sqm').value * document.getElementById('rate').value;
+        doc.text(`TOTAL ESTIMATE: N${liveTotal.toLocaleString()}`, 20, 80);
 
-            doc.text("Thank you for using our digital planning services.", 20, 100);
-            
-            doc.save("Property_Estimate_Okosun.pdf");
-        }
-    </script>
+        doc.text("------------------------------------------", 20, 90);
+
+        // --- 5-Year Legacy Plan Section ---
+        doc.setFontSize(14);
+        doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
+        doc.setFontSize(12);
+        let mBase = liveTotal * 0.015;
+        doc.text(`Year 1 (Structural/Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
+        doc.text(`Year 3 (Exterior Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
+        doc.text(`Year 5 (Full System Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
+
+        doc.text("Thank you for using our digital planning services.", 20, 160);
+
+        doc.save("Property_Estimate_Okosun.pdf");
+    }
+</script>
 </body>
 </html>
 
+ 
