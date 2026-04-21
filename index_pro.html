@@ -34,7 +34,33 @@
 
         <button onclick="calculate()">Calculate Estimate</button>
         
-        <div id="result"></div>
+        <div id="result"></div><div id="maintenance-plan" style="margin-top: 25px; border: 1px solid #bdc3c7; padding: 15px; border-radius: 8px; background-color: #ffffff; display: none;">
+    <h3 style="color: #2c3e50; border-bottom: 2px solid #e67e22; padding-bottom: 5px;">🛡️ 5-Year Legacy Maintenance Plan</h3>
+    <p style="font-size: 13px; color: #7f8c8d;">Protect your investment with these scheduled actions:</p>
+    <table style="width: 100%; font-size: 14px; text-align: left;">
+        <tr>
+            <th style="padding: 5px;">Phase</th>
+            <th style="padding: 5px;">Action</th>
+            <th style="padding: 5px;">Budget</th>
+        </tr>
+        <tr>
+            <td style="padding: 5px;">Year 1</td>
+            <td style="padding: 5px;">Structural Check & Fumigation</td>
+            <td id="y1-cost" style="font-weight: bold; color: #27ae60;"></td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;">Year 3</td>
+            <td style="padding: 5px;">Exterior Painting & Sealing</td>
+            <td id="y3-cost" style="font-weight: bold; color: #27ae60;"></td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;">Year 5</td>
+            <td style="padding: 5px;">Full System Audit</td>
+            <td id="y5-cost" style="font-weight: bold; color: #27ae60;"></td>
+        </tr>
+    </table>
+</div>
+
         
         <div id="actions" style="display:none;">
             <button onclick="generatePDF()" style="background-color: #6c757d;">Download PDF Report</button>
@@ -52,7 +78,14 @@
             if (sqm && rate) {
                 finalEstimate = sqm * rate;
                 document.getElementById('result').innerHTML = "Total Estimate: ₦" + finalEstimate.toLocaleString();
-                
+                // --- Start of Legacy Plan Logic ---
+let mainBase = finalEstimate * 0.015;
+document.getElementById('y1-cost').innerText = "₦" + (mainBase * 0.4).toLocaleString();
+document.getElementById('y3-cost').innerText = "₦" + (mainBase * 1.1).toLocaleString();
+document.getElementById('y5-cost').innerText = "₦" + (mainBase * 1.8).toLocaleString();
+document.getElementById('maintenance-plan').style.display = "block";
+// --- End of Legacy Plan Logic ---
+
                 // Show action buttons
                 document.getElementById('actions').style.display = "block";
                 
@@ -77,6 +110,19 @@
             doc.text(`Rate per sqm: ₦${document.getElementById('rate').value}`, 20, 60);
             doc.text(`TOTAL ESTIMATE: ₦${finalEstimate.toLocaleString()}`, 20, 80);
             doc.text("------------------------------------------", 20, 90);
+            // --- Start Legacy Plan Section ---
+doc.setFontSize(14);
+doc.setTextColor(44, 62, 80); // Dark Blue Color
+doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
+
+doc.setFontSize(12);
+doc.setTextColor(0, 0, 0); // Back to Black
+let mBase = finalEstimate * 0.015;
+doc.text(`Year 1 (Structural/Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
+doc.text(`Year 3 (Exterior Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
+doc.text(`Year 5 (Full System Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
+// --- End Legacy Plan Section ---
+
             doc.text("Thank you for using our digital planning services.", 20, 100);
             
             doc.save("Property_Estimate_Okosun.pdf");
@@ -84,3 +130,4 @@
     </script>
 </body>
 </html>
+
