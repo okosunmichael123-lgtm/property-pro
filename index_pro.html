@@ -9,7 +9,7 @@
         body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f7f6; }
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
         input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
         #result { margin-top: 20px; font-weight: bold; text-align: center; font-size: 18px; }
         #maintenance-plan { display: none; margin-top: 20px; border: 1px solid #e67e22; padding: 15px; border-radius: 8px; background-color: #fff9f4; }
     </style>
@@ -57,6 +57,8 @@
     function generatePDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+        
+        // Grab values directly from the boxes to avoid the "180" error
         const sqm = document.getElementById('sqm').value;
         const rate = document.getElementById('rate').value;
         const total = sqm * rate;
@@ -65,10 +67,12 @@
         doc.setFontSize(18);
         doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
         doc.setFontSize(12);
+        doc.text("------------------------------------------", 20, 30);
         doc.text(`Consultant: Michael Okosun`, 20, 40);
         doc.text(`Total Area: ${sqm} sqm`, 20, 50);
-        doc.text(`Rate per sqm: N${rate}`, 20, 60);
+        doc.text(`Rate per sqm: N${Number(rate).toLocaleString()}`, 20, 60);
         doc.text(`TOTAL ESTIMATE: N${total.toLocaleString()}`, 20, 80);
+        doc.text("------------------------------------------", 20, 90);
         
         doc.setFontSize(14);
         doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
@@ -83,5 +87,3 @@
 </script>
 </body>
 </html>
-
-         
