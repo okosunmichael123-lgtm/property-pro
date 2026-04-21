@@ -96,40 +96,51 @@ document.getElementById('maintenance-plan').style.display = "block";
                 alert("Please fill in all fields.");
             }
         }
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            doc.setFontSize(18);
-            doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
-            doc.setFontSize(12);
-            doc.text("------------------------------------------", 20, 30);
-            doc.text(`Consultant: Michael Okosun`, 20, 40);
-                    doc.text(`Total Area: ${document.getElementById('sqm').value} sqm`, 20, 50);
-        doc.text(`Rate per sqm: N${document.getElementById('rate').value}`, 20, 60);
+    // LIVE DATA GRAB: This is the secret to fixing the 180 sqm error
+    const sqmValue = document.getElementById('sqm').value;
+    const rateValue = document.getElementById('rate').value;
+    const totalValue = sqmValue * rateValue;
+    const mBase = totalValue * 0.015;
 
-        // This line calculates the LIVE total so it is always correct
-        const liveTotal = document.getElementById('sqm').value * document.getElementById('rate').value;
-        doc.text(`TOTAL ESTIMATE: N${liveTotal.toLocaleString()}`, 20, 80);
+    // Header
+    doc.setFontSize(18);
+    doc.setTextColor(44, 62, 80);
+    doc.text("PROPERTY ESTIMATION REPORT", 20, 20);
+    
+    // Details
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text("------------------------------------------", 20, 30);
+    doc.text(`Consultant: Michael Okosun`, 20, 40);
+    doc.text(`Total Area: ${sqmValue} sqm`, 20, 50);
+    doc.text(`Rate per sqm: N${Number(rateValue).toLocaleString()}`, 20, 60);
+    doc.text(`TOTAL ESTIMATE: N${totalValue.toLocaleString()}`, 20, 80);
+    doc.text("------------------------------------------", 20, 90);
 
-        doc.text("------------------------------------------", 20, 90);
+    // Legacy Maintenance Plan - THE PROFESSIONAL TOUCH
+    doc.setFontSize(14);
+    doc.setTextColor(230, 126, 34); // Orange color for the title
+    doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Year 1 (Structural/Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
+    doc.text(`Year 3 (Exterior Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
+    doc.text(`Year 5 (Full System Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
 
-        // --- 5-Year Legacy Plan Section ---
-        doc.setFontSize(14);
-        doc.text("--- 5-YEAR LEGACY MAINTENANCE PLAN ---", 20, 110);
-        doc.setFontSize(12);
-        let mBase = liveTotal * 0.015;
-        doc.text(`Year 1 (Structural/Fumigation): N${(mBase * 0.4).toLocaleString()}`, 20, 125);
-        doc.text(`Year 3 (Exterior Painting): N${(mBase * 1.1).toLocaleString()}`, 20, 135);
-        doc.text(`Year 5 (Full System Audit): N${(mBase * 1.8).toLocaleString()}`, 20, 145);
+    // Footer
+    doc.setFontSize(10);
+    doc.setTextColor(127, 140, 141);
+    doc.text("Thank you for using our digital planning services.", 20, 165);
 
-        doc.text("Thank you for using our digital planning services.", 20, 160);
-
-        doc.save("Property_Estimate_Okosun.pdf");
-    }
+    // Save
+    doc.save("Property_Estimate_Okosun.pdf");
+}
 </script>
 </body>
 </html>
-
- 
+         
